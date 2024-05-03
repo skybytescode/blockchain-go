@@ -8,14 +8,23 @@ import (
 )
 
 const (
-	privKeyLen = 64
-	pubKeyLen  = 32
-	seedLen    = 32
-	addressLen = 20
+	PrivKeyLen   = 64
+	SignatureLen = 64
+	PubKeyLen    = 32
+	SeedLen      = 32
+	AddressLen   = 20
 )
 
 type PrivateKey struct {
 	key ed25519.PrivateKey
+}
+
+func NewPrivateKeyFromSeedStr(s string) *PrivateKey {
+	seedBytes, err := hex.DecodeString(s)
+	if err != nil {
+		panic(err)
+	}
+	return NewPrivateKeyFromSeed(seedBytes)
 }
 
 func NewPrivateKeyFromString(s string) *PrivateKey {
@@ -27,7 +36,7 @@ func NewPrivateKeyFromString(s string) *PrivateKey {
 }
 
 func NewPrivateKeyFromSeed(seed []byte) *PrivateKey {
-	if len(seed) != seedLen {
+	if len(seed) != SeedLen {
 		panic("invalid seed length, must be 32")
 	}
 	return &PrivateKey{
@@ -36,7 +45,7 @@ func NewPrivateKeyFromSeed(seed []byte) *PrivateKey {
 }
 
 func GeneratePrivateKey() *PrivateKey {
-	seed := make([]byte, seedLen)
+	seed := make([]byte, SeedLen)
 	_, err := io.ReadFull(rand.Reader, seed)
 	if err != nil {
 		panic(err)
@@ -57,7 +66,7 @@ func (p *PrivateKey) Sign(msg []byte) *Signature {
 }
 
 func (p *PrivateKey) Public() *PublicKey {
-	b := make([]byte, pubKeyLen)
+	b := make([]byte, PubKeyLen)
 	copy(b, p.key[32:])
 	return &PublicKey{
 		key: b,
@@ -68,9 +77,18 @@ type PublicKey struct {
 	key ed25519.PublicKey
 }
 
+func PublicKeyFromBytes(b []byte) *PublicKey {
+	if len(b) != PubKeyLen {
+		panic("invalid public key length")
+	}
+	return &PublicKey{
+		key: ed25519.PublicKey(b),
+	}
+}
+
 func (p *PublicKey) Address() Address {
 	return Address{
-		value: p.key[len(p.key)-addressLen:],
+		value: p.key[len(p.key)-AddressLen:],
 	}
 }
 
@@ -80,6 +98,15 @@ func (p *PublicKey) Bytes() []byte {
 
 type Signature struct {
 	value []byte
+}
+
+func SignatureFromBytes(b []byte) *Signature {
+	if len(b) != SignatureLen {
+		panic("length of the bytes not equal to 64")
+	}
+	return &Signature{
+		value: b,
+	}
 }
 
 func (s *Signature) Bytes() []byte {
@@ -92,6 +119,15 @@ func (s *Signature) Verify(pubKey *PublicKey, msg []byte) bool {
 
 type Address struct {
 	value []byte
+}
+
+func AddressFromBytes(b []byte) Address {
+	if len(b) != AddressLen {
+		panic("length of the (address) bytes not equal to 20")
+	}
+	return Address{
+		value: b,
+	}
 }
 
 func (a Address) Bytes() []byte {
