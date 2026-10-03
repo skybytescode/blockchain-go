@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"github.com/cbergoon/merkletree"
-	pb "google.golang.org/protobuf/proto"
 	"github.com/skybytescode/blockchain-go/crypto"
 	"github.com/skybytescode/blockchain-go/proto"
+	pb "google.golang.org/protobuf/proto"
 )
 
 type TxHash struct {
@@ -85,7 +85,8 @@ func VerifyRootHash(b *proto.Block) bool {
 	return bytes.Equal(b.Header.RootHash, tree.MerkleRoot())
 }
 
-// Implementation of the MerkleTree
+// GetMerkelTree builds the Merkle tree of the block's transactions. It does not
+// touch the block: VerifyRootHash compares the result with the stored root.
 func GetMerkelTree(b *proto.Block) (*merkletree.MerkleTree, error) {
 	list := make([]merkletree.Content, len(b.Transactions))
 	for i := 0; i < len(b.Transactions); i++ {
@@ -96,9 +97,6 @@ func GetMerkelTree(b *proto.Block) (*merkletree.MerkleTree, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	b.Header.RootHash = t.MerkleRoot()
-
 	return t, nil
 }
 

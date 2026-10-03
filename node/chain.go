@@ -7,6 +7,7 @@ import (
 	"github.com/skybytescode/blockchain-go/crypto"
 	"github.com/skybytescode/blockchain-go/proto"
 	"github.com/skybytescode/blockchain-go/types"
+	"math"
 )
 
 const genesisSeed = "704c4c0aa9cce32540199cfa0e630a1aa12326e338426c2591caf4d7b89f9e93"
@@ -44,7 +45,12 @@ type UTXO struct {
 	Hash     string
 	OutIndex int
 	Amount   int64
+	Address  []byte // owner; only this address's key may spend it
 	Spent    bool
+}
+
+func utxoKey(txHash string, outIndex int) string {
+	return fmt.Sprintf("%s_%d", txHash, outIndex)
 }
 
 type Chain struct {
@@ -89,6 +95,7 @@ func (c *Chain) addBlock(b *proto.Block) error {
 			utxo := &UTXO{
 				Hash:     hash,
 				Amount:   output.Amount,
+				Address:  output.Address,
 				OutIndex: it,
 				Spent:    false,
 			}
@@ -97,7 +104,7 @@ func (c *Chain) addBlock(b *proto.Block) error {
 			}
 		}
 		for _, input := range tx.Inputs {
-			key := fmt.Sprintf("%s_%d", hex.EncodeToString(input.PrevTxHash), input.PrevOutIndex)
+			key := utxoKey(hex.EncodeToString(input.PrevTxHash), int(input.PrevOutIndex))
 			utxo, err := c.utxoStore.Get(key)
 			if err != nil {
 				return err
@@ -140,41 +147,65 @@ func (c *Chain) ValidateBlock(b *proto.Block) error {
 		return fmt.Errorf("invalid previous block hash")
 	}
 
+	// Outputs spent by earlier transactions in this block are not marked spent
+	// in the store yet, so track them to catch double spends inside the block.
+	spentInBlock := make(map[string]bool)
 	for _, tx := range b.Transactions {
-		if err := c.ValidateTransaction(tx); err != nil {
+		if err := c.validateTransaction(tx, spentInBlock); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
+// ValidateTransaction checks a single transaction against the current chain
+// state, for example before it enters the mempool.
 func (c *Chain) ValidateTransaction(tx *proto.Transaction) error {
-	// Verify the signature
+	return c.validateTransaction(tx, make(map[string]bool))
+}
+
+func (c *Chain) validateTransaction(tx *proto.Transaction, spent map[string]bool) error {
 	if !types.VerifyTransaction(tx) {
 		return fmt.Errorf("invalid tx signature")
 	}
-	// Check if all the inputs are unspent
-	var (
-		nInputs = len(tx.Inputs)
-		hash    = hex.EncodeToString(types.HashTransaction(tx))
-	)
+	if len(tx.Inputs) == 0 {
+		return fmt.Errorf("transaction has no inputs")
+	}
+	hash := hex.EncodeToString(types.HashTransaction(tx))
 
-	sumInputs := 0
-	for i := 0; i < nInputs; i++ {
-		prevHash := hex.EncodeToString(tx.Inputs[i].PrevTxHash)
-		key := fmt.Sprintf("%s_%d", prevHash, i)
+	var sumInputs int64
+	for i, input := range tx.Inputs {
+		key := utxoKey(hex.EncodeToString(input.PrevTxHash), int(input.PrevOutIndex))
+		if spent[key] {
+			return fmt.Errorf("input %d of tx %s: output %s is spent twice", i, hash, key)
+		}
 		utxo, err := c.utxoStore.Get(key)
-		sumInputs += int(utxo.Amount)
 		if err != nil {
 			return err
 		}
 		if utxo.Spent {
 			return fmt.Errorf("input %d of tx %s is already spent", i, hash)
 		}
+		owner := crypto.PublicKeyFromBytes(input.PublicKey).Address().Bytes()
+		if !bytes.Equal(owner, utxo.Address) {
+			return fmt.Errorf("input %d of tx %s spends an output not owned by its key", i, hash)
+		}
+		spent[key] = true
+		sumInputs += utxo.Amount
 	}
-	sumOutputs := 0
-	for _, output := range tx.Outputs {
-		sumOutputs += int(output.Amount)
+
+	var sumOutputs int64
+	for i, output := range tx.Outputs {
+		if output.Amount <= 0 {
+			return fmt.Errorf("output %d of tx %s: amount must be positive", i, hash)
+		}
+		if len(output.Address) != crypto.AddressLen {
+			return fmt.Errorf("output %d of tx %s: invalid address", i, hash)
+		}
+		if output.Amount > math.MaxInt64-sumOutputs {
+			return fmt.Errorf("tx %s: outputs overflow", hash)
+		}
+		sumOutputs += output.Amount
 	}
 	if sumInputs < sumOutputs {
 		return fmt.Errorf("insufficient balance got (%d) spending (%d)", sumInputs, sumOutputs)
