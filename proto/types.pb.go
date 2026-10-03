@@ -486,10 +486,11 @@ const file_proto_types_proto_rawDesc = "" +
 	"\vTransaction\x12\x18\n" +
 	"\aversion\x18\x01 \x01(\x05R\aversion\x12 \n" +
 	"\x06inputs\x18\x02 \x03(\v2\b.TxInputR\x06inputs\x12#\n" +
-	"\aoutputs\x18\x03 \x03(\v2\t.TxOutputR\aoutputs2P\n" +
+	"\aoutputs\x18\x03 \x03(\v2\t.TxOutputR\aoutputs2m\n" +
 	"\x04Node\x12\x1f\n" +
 	"\tHandshake\x12\b.Version\x1a\b.Version\x12'\n" +
-	"\x11HandleTransaction\x12\f.Transaction\x1a\x04.AckB-Z+github.com/skybytescode/blockchain-go/protob\x06proto3"
+	"\x11HandleTransaction\x12\f.Transaction\x1a\x04.Ack\x12\x1b\n" +
+	"\vHandleBlock\x12\x06.Block\x1a\x04.AckB-Z+github.com/skybytescode/blockchain-go/protob\x06proto3"
 
 var (
 	file_proto_types_proto_rawDescOnce sync.Once
@@ -520,10 +521,12 @@ var file_proto_types_proto_depIdxs = []int32{
 	5, // 3: Transaction.outputs:type_name -> TxOutput
 	0, // 4: Node.Handshake:input_type -> Version
 	6, // 5: Node.HandleTransaction:input_type -> Transaction
-	0, // 6: Node.Handshake:output_type -> Version
-	1, // 7: Node.HandleTransaction:output_type -> Ack
-	6, // [6:8] is the sub-list for method output_type
-	4, // [4:6] is the sub-list for method input_type
+	2, // 6: Node.HandleBlock:input_type -> Block
+	0, // 7: Node.Handshake:output_type -> Version
+	1, // 8: Node.HandleTransaction:output_type -> Ack
+	1, // 9: Node.HandleBlock:output_type -> Ack
+	7, // [7:10] is the sub-list for method output_type
+	4, // [4:7] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
 	4, // [4:4] is the sub-list for extension extendee
 	0, // [0:4] is the sub-list for field type_name

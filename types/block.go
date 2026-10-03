@@ -45,10 +45,7 @@ func VerifyBlock(b *proto.Block) bool {
 		hash   = HashBlock(b)
 	)
 
-	if !sig.Verify(pubKey, hash) {
-		return false
-	}
-	return true
+	return sig.Verify(pubKey, hash)
 }
 
 func SignBlock(pk *crypto.PrivateKey, b *proto.Block) *crypto.Signature {
