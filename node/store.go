@@ -38,8 +38,7 @@ func (s *MemoryUTXOStore) Get(hash string) (*UTXO, error) {
 func (s *MemoryUTXOStore) Put(utxo *UTXO) error {
 	s.lock.Lock()
 	defer s.lock.Unlock()
-	key := fmt.Sprintf("%s_%d", utxo.Hash, utxo.OutIndex)
-	s.data[key] = utxo
+	s.data[utxoKey(utxo.Hash, utxo.OutIndex)] = utxo
 	return nil
 }
 

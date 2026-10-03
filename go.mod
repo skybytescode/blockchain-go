@@ -1,6 +1,6 @@
 module github.com/skybytescode/blockchain-go
 
-go 1.25.0
+go 1.26
 
 require (
 	github.com/cbergoon/merkletree v0.2.0

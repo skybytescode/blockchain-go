@@ -5,6 +5,7 @@ option go_package = "github.com/skybytescode/blockchain-go/proto";
 service Node {
   rpc Handshake(Version) returns (Version);
   rpc HandleTransaction(Transaction) returns (Ack);
+  rpc HandleBlock(Block) returns (Ack);
 }
 
 message Version {

@@ -2,12 +2,12 @@ package node
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/skybytescode/blockchain-go/crypto"
 	"github.com/skybytescode/blockchain-go/proto"
 	"github.com/skybytescode/blockchain-go/types"
 	"github.com/skybytescode/blockchain-go/util"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
