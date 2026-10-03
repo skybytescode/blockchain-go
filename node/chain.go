@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
-	"github.com/w3gop2p/BLOCKCHAIN/crypto"
-	"github.com/w3gop2p/BLOCKCHAIN/proto"
-	"github.com/w3gop2p/BLOCKCHAIN/types"
+	"github.com/skybytescode/blockchain-go/crypto"
+	"github.com/skybytescode/blockchain-go/proto"
+	"github.com/skybytescode/blockchain-go/types"
 )
 
 const genesisSeed = "704c4c0aa9cce32540199cfa0e630a1aa12326e338426c2591caf4d7b89f9e93"

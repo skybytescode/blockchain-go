@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/w3gop2p/BLOCKCHAIN/crypto"
-	"github.com/w3gop2p/BLOCKCHAIN/proto"
-	"github.com/w3gop2p/BLOCKCHAIN/types"
-	"github.com/w3gop2p/BLOCKCHAIN/util"
+	"github.com/skybytescode/blockchain-go/crypto"
+	"github.com/skybytescode/blockchain-go/proto"
+	"github.com/skybytescode/blockchain-go/types"
+	"github.com/skybytescode/blockchain-go/util"
 	"testing"
 )
 

@@ -3,9 +3,9 @@ package node
 import (
 	"context"
 	"encoding/hex"
-	"github.com/w3gop2p/BLOCKCHAIN/crypto"
-	"github.com/w3gop2p/BLOCKCHAIN/proto"
-	"github.com/w3gop2p/BLOCKCHAIN/types"
+	"github.com/skybytescode/blockchain-go/crypto"
+	"github.com/skybytescode/blockchain-go/proto"
+	"github.com/skybytescode/blockchain-go/types"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/peer"

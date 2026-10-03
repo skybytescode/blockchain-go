@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/w3gop2p/BLOCKCHAIN/proto";
+option go_package = "github.com/skybytescode/blockchain-go/proto";
 
 service Node {
   rpc Handshake(Version) returns (Version);

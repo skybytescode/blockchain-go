@@ -3,8 +3,8 @@ package node
 import (
 	"encoding/hex"
 	"fmt"
-	"github.com/w3gop2p/BLOCKCHAIN/proto"
-	"github.com/w3gop2p/BLOCKCHAIN/types"
+	"github.com/skybytescode/blockchain-go/proto"
+	"github.com/skybytescode/blockchain-go/types"
 	"sync"
 )
 

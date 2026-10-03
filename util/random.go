@@ -2,7 +2,7 @@ package util
 
 import (
 	randc "crypto/rand"
-	"github.com/w3gop2p/BLOCKCHAIN/proto"
+	"github.com/skybytescode/blockchain-go/proto"
 	"io"
 	"math/rand"
 	"time"

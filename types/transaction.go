@@ -2,9 +2,9 @@ package types
 
 import (
 	"crypto/sha256"
-	pb "github.com/golang/protobuf/proto"
-	"github.com/w3gop2p/BLOCKCHAIN/crypto"
-	"github.com/w3gop2p/BLOCKCHAIN/proto"
+	pb "google.golang.org/protobuf/proto"
+	"github.com/skybytescode/blockchain-go/crypto"
+	"github.com/skybytescode/blockchain-go/proto"
 )
 
 func SignTransaction(pk *crypto.PrivateKey, tx *proto.Transaction) *crypto.Signature {

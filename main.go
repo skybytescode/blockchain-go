@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"github.com/w3gop2p/BLOCKCHAIN/crypto"
-	"github.com/w3gop2p/BLOCKCHAIN/node"
-	"github.com/w3gop2p/BLOCKCHAIN/proto"
-	"github.com/w3gop2p/BLOCKCHAIN/util"
+	"github.com/skybytescode/blockchain-go/crypto"
+	"github.com/skybytescode/blockchain-go/node"
+	"github.com/skybytescode/blockchain-go/proto"
+	"github.com/skybytescode/blockchain-go/util"
 	"google.golang.org/grpc"
 	"log"
 	"time"

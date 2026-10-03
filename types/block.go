@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"github.com/cbergoon/merkletree"
-	pb "github.com/golang/protobuf/proto"
-	"github.com/w3gop2p/BLOCKCHAIN/crypto"
-	"github.com/w3gop2p/BLOCKCHAIN/proto"
+	pb "google.golang.org/protobuf/proto"
+	"github.com/skybytescode/blockchain-go/crypto"
+	"github.com/skybytescode/blockchain-go/proto"
 )
 
 type TxHash struct {
