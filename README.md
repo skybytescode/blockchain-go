@@ -7,6 +7,8 @@ a UTXO model, blocks with Merkle roots, and nodes that discover each other and
 gossip transactions and blocks over gRPC. Blocks are produced by trusted
 validators (proof of authority).
 
+![Architecture](docs/images/architecture.png)
+
 ## How it works
 
 - **Keys and addresses** ([`crypto`](crypto)): ed25519 key pairs; an address
@@ -57,6 +59,8 @@ INFO  added block    {"node": ":7002", "height": 1, "hash": "e78147e1e5", "txs":
 INFO  added block    {"node": ":7001", "height": 1, "hash": "e78147e1e5", "txs": 1}
 ```
 
+![Demo network](docs/images/demo.png)
+
 ## Tests
 
 ```bash
@@ -75,6 +79,10 @@ make test   # go test -race ./...
 generated gRPC code matches `proto/types.proto`, runs `go vet`, staticcheck and
 the tests with the race detector, and builds the binary on every push and pull
 request.
+
+| | |
+|---|---|
+| ![Tests](docs/images/tests.png) | ![CI](docs/images/ci.png) |
 
 ## History
 
